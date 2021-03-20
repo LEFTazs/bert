@@ -686,9 +686,25 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
         accuracy = tf.metrics.accuracy(
             labels=label_ids, predictions=predictions, weights=is_real_example)
         loss = tf.metrics.mean(values=per_example_loss, weights=is_real_example)
+        false_negatives = tf.metrics.false_negatives(labels=label_ids, predictions=predictions,
+                                                     weights=is_real_example)
+        false_positives = tf.metrics.false_positives(labels=label_ids, predictions=predictions,
+                                                     weights=is_real_example)
+        true_negatives = tf.metrics.true_negatives(labels=label_ids, predictions=predictions,
+                                                   weights=is_real_example)
+        true_positives = tf.metrics.true_positives(labels=label_ids, predictions=predictions,
+                                                   weights=is_real_example)
+        recall = tf.metrics.recall(labels=label_ids, predictions=predictions, weights=is_real_example)
+        precision = tf.metrics.precision(labels=label_ids, predictions=predictions, weights=is_real_example)
         return {
             "eval_accuracy": accuracy,
             "eval_loss": loss,
+            "false_negatives": false_negatives,
+            "false_positives": false_positives,
+            "true_negatives": true_negatives,
+            "true_positives": true_positives,
+            "recall": recall,
+            "precision": precision
         }
 
       eval_metrics = (metric_fn,
